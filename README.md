@@ -1,5 +1,7 @@
 # Raycaster_test
 
-todo fix camera
-improve the raycasting accuracy
-improve ui and map
+# todo
+
+- fix movement (make it based on the angle the camera is rotated to)
+- improve the raycasting accuracy
+- improve ui and map
