@@ -5,7 +5,7 @@
 - fix movement (make it based on the angle the camera is rotated to)
 - improve the raycasting accuracy (aka fix the fishtank effect (bug))
 - improve ui
-- fix distance math
+- fix distance math (checkcollison distsance)
 
 # done
 
