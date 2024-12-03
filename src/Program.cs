@@ -329,6 +329,23 @@ class Program
                     ImGui.EndChild();
                 }
 
+                HandleInput.HandleGameInput();
+
+                GameData.RenderType = Types.RenderType._2d;
+
+                foreach (var item in Map.GetMap())
+                {
+                    var objectobj = item;
+                    objectobj.X = objectobj.X + PlayerData.PlayerPosition.X;
+                    objectobj.Y = objectobj.Y + PlayerData.PlayerPosition.Y;
+                    Raylib.DrawRectangleRec(objectobj, Color.White);
+                }
+                    
+                Program.playerscreenpos = new Vector2((int)GameData.Consts.WindowSize.X / 2, (int)GameData.Consts.WindowSize.Y / 2);
+                Program.playerscreenMIN = new Vector2((int)GameData.Consts.WindowSize.X / 2, (int)(GameData.Consts.WindowSize.Y / 2) - Program.playersize / 2);
+                Program.playerscreenMAX = new Vector2((int)GameData.Consts.WindowSize.X / 2, (int)(GameData.Consts.WindowSize.Y / 2) + Program.playersize / 2);
+                Raylib.DrawCircle((int)Program.playerscreenpos.X, (int)Program.playerscreenpos.Y, Program.playersize, Color.White);
+
                 ImGui.End();
                 rlImGui.End();
                 break;

@@ -99,6 +99,22 @@ class HandleInput
                     }
                 }
                 break;
+            case Types.Stages.leveleditor:
+                   int _step = 6;
+
+                    if (Raylib.IsKeyDown(KeyboardKey.W) || Raylib.IsKeyDown(KeyboardKey.Up)) {
+                        PlayerData.PlayerPosition.Y += _step;
+                    }
+                    if (Raylib.IsKeyDown(KeyboardKey.S) || Raylib.IsKeyDown(KeyboardKey.Down)) {
+                        PlayerData.PlayerPosition.Y -= _step;
+                    }
+                    if (Raylib.IsKeyDown(KeyboardKey.A) || Raylib.IsKeyDown(KeyboardKey.Left)) {
+                        PlayerData.PlayerPosition.X += _step;
+                    }
+                    if (Raylib.IsKeyDown(KeyboardKey.D) || Raylib.IsKeyDown(KeyboardKey.Right)) {
+                        PlayerData.PlayerPosition.X -= _step;
+                    }
+                break;
             default:
                 break;
         }

@@ -8,6 +8,10 @@ class Map
     static string path;
     static List<Rectangle> mapdata = new List<Rectangle>();
     public static Rectangle[] GetMap() {
+        if (GameData.currentstage == Types.Stages.leveleditor) {
+            return levelmap.ToArray();
+        }
+
         if (maploaded == -1) {
             foreach (var item in Directory.GetFiles(Directory.GetCurrentDirectory()))
             {

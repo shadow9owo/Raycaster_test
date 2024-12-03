@@ -1,3 +1,4 @@
+using System.Numerics;
 using Raylib_cs;
 
 class Utils
@@ -25,6 +26,8 @@ class Utils
                 GameData.transitioning = false;
                 varscene = 0;
                 GameData.paused = false;
+                PlayerData.CameraRotation = 0;
+                PlayerData.PlayerPosition = Vector2.Zero;
                 Raylib.DrawRectangle(0,0,(int)GameData.Consts.WindowSize.X,(int)GameData.Consts.WindowSize.Y,new Color(0,0,0,255));
             }
             timerbuffer = 0;
