@@ -2,14 +2,12 @@
 using ImGuiNET;
 using rlImGui_cs;
 using Raylib_cs;
-using System;
 using Newtonsoft.Json;
 
 namespace suzabkktgame;
 
 class Program
 {
-    private static Color backgroundcolor;
     public static float colorshort = short.MinValue;
     private static int playersize = 8;
     public static Vector2 playerscreenpos;
@@ -204,9 +202,9 @@ class Program
                                         (int)raywallsize,
                                         (int)(GameData.Consts.WindowSize.Y - (GameData.Consts.WindowSize.Y / Misc.checkcollision(new Rectangle(lineEnd, 4, 4), Map.GetMap()).Item2)),
                                         new Color(
-                                            backgroundcolor.R,
-                                            (int)Math.Clamp(0 + (255 / (Misc.checkcollision(new Rectangle(lineEnd, 4, 4), Map.GetMap()).Item2)), 0, 255),
-                                            backgroundcolor.B,
+                                            Math.Clamp(255 / (int)Misc.checkcollision(new Rectangle(lineEnd, 4, 4), Map.GetMap()).Item2 * 5,0,255),
+                                            Math.Clamp(Misc.shorttocolor((short)colorshort).G /4,0,255),
+                                            Math.Clamp(255 / (int)Misc.checkcollision(new Rectangle(lineEnd, 4, 4), Map.GetMap()).Item2 * 10,0,255),
                                             255
                                         )
                                     );
