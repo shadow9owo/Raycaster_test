@@ -24,6 +24,7 @@ class Utils
                 progress = 0;
                 GameData.transitioning = false;
                 varscene = 0;
+                GameData.paused = false;
                 Raylib.DrawRectangle(0,0,(int)GameData.Consts.WindowSize.X,(int)GameData.Consts.WindowSize.Y,new Color(0,0,0,255));
             }
             timerbuffer = 0;

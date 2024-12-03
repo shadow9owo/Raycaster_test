@@ -17,7 +17,14 @@ class HandleInput
             case Types.Stages.game:
 
                 if (Raylib.IsKeyPressed(KeyboardKey.Escape)) {
-                    GameData.paused = !GameData.paused;
+                        if (GameData.currentstage == Types.Stages.game && !GameData.transitioning) {
+                            GameData.paused = !GameData.paused;
+                        if (GameData.paused) {
+                            Raylib.ShowCursor();
+                        }else {
+                            Raylib.HideCursor();
+                        }
+                    }
                 }
 
                 if (!GameData.paused) {

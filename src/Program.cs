@@ -21,6 +21,8 @@ class Program
         switch (GameData.currentstage)
         {
             case Types.Stages.mainmenu:
+
+
                 Raylib.ClearBackground(Color.Black);
 
                 Raylib.DrawTexturePro(Textures.mainmenutexture,new Rectangle(0,0,GameData.Consts.WindowSize),new Rectangle(0,0,GameData.Consts.WindowSize),new Vector2(0,0),0,Color.White);
@@ -35,14 +37,14 @@ class Program
 
                 //Play BTN
 
-                Rectangle playbtn = new Rectangle((GameData.Consts.WindowSize.X / 2) - Raylib.MeasureTextEx(Raylib.GetFontDefault(),"Play",36,0).X,(GameData.Consts.WindowSize.Y / 2) - Raylib.MeasureTextEx(Raylib.GetFontDefault(),"Play",36,0).Y,36 * 3,48);
+                Rectangle playbtn = new Rectangle((GameData.Consts.WindowSize.X / 2) - Raylib.MeasureTextEx(Raylib.GetFontDefault(),"Play",36,0).X,(GameData.Consts.WindowSize.Y / 2) - Raylib.MeasureTextEx(Raylib.GetFontDefault(),"Play",36,0).Y ,36 * 3,48);
 
                 if (Raylib.CheckCollisionRecs(mouse,playbtn)) {
                     Raylib.DrawRectangleRec(playbtn,Color.DarkPurple);
                     if (Raylib.IsMouseButtonPressed(MouseButton.Left)) { //button clicked
                         if (!GameData.transitioning) {
                             Utils.CallTransitionToOtherScene(Types.Stages.game);
-                            
+                            Raylib.PlaySound(Audio.select);
                             Raylib.HideCursor();
                         }
                     }
@@ -59,6 +61,8 @@ class Program
                     Raylib.DrawRectangleRec(quitbtn,Color.DarkPurple);
                     if (Raylib.IsMouseButtonPressed(MouseButton.Left)) { //button clicked
                         if (!GameData.transitioning) {
+                            Raylib.PlaySound(Audio.select);
+                            Raylib.WaitTime(1);
                             GameData.ShouldClose = true;
                         }
                     }
@@ -71,9 +75,24 @@ class Program
             case Types.Stages.game:
                 if (!GameData.paused) 
                 {
-                    Raylib.SetMousePosition((int)GameData.Consts.WindowSize.X / 2,(int)GameData.Consts.WindowSize.Y / 2);
+                    Raylib.SetMousePosition((int)GameData.Consts.WindowSize.X / 2 ,(int)GameData.Consts.WindowSize.Y / 2);
                 }else {
                     Raylib.DrawText("PAUSED",0,0,24,Color.White);
+
+                    Rectangle backtomenubtn = new Rectangle(0,80,36 * 8,48);
+
+                    if (Raylib.CheckCollisionRecs(mouse,backtomenubtn)) {
+                        Raylib.DrawRectangleRec(backtomenubtn,Color.DarkPurple);
+                        if (Raylib.IsMouseButtonPressed(MouseButton.Left)) { //button clicked
+                            if (!GameData.transitioning) {
+                                Utils.CallTransitionToOtherScene(Types.Stages.mainmenu);
+                                Raylib.PlaySound(Audio.select);
+                            }
+                        }
+                    }else {
+                        Raylib.DrawRectangleRec(backtomenubtn,Color.Purple);
+                    }
+                    Raylib.DrawText("Back To Menu",(int)backtomenubtn.X + 20,(int)backtomenubtn.Y + 5,36,Color.Black);
                 }
                 switch (GameData.RenderType)
                 {
@@ -328,11 +347,15 @@ class Program
 
         Raylib.InitWindow((int)GameData.Consts.WindowSize.X,(int)GameData.Consts.WindowSize.Y, GameData.GetWindowTitle());
 
+        Raylib.InitAudioDevice();
+
         Raylib.SetExitKey(0);
 
         rlImGui.Setup(true);
 
         Textures.LoadTextures();	
+
+        Audio.loadsfxresources();
 
         GameData.RenderType = Types.RenderType._2d;
 
@@ -352,10 +375,11 @@ class Program
 
             Raylib.EndDrawing();
         }
-
         rlImGui.Shutdown();
 
         Raylib.ShowCursor();
+
+        Raylib.CloseAudioDevice();
 
         Raylib.CloseWindow();
     }
