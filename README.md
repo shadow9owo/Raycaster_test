@@ -3,6 +3,7 @@
 # todo
 
 - fix movement (make it based on the angle the camera is rotated to)
+- fix invert draw bug
 
 # done
 
