@@ -11,4 +11,4 @@
 - improve ui
 - improve the raycasting accuracy (aka fix the fishtank effect (bug))
 - fix distance math (checkcollison distsance)
-- fix invert draw bug
+- fix invert draw bug (not perfect but oh well)
