@@ -176,11 +176,14 @@ class Program
                         float _fov = MathF.PI / 3f;
                         float _startAngle = PlayerData.CameraRotation - _fov / 2f;
                     
+                        Raylib.DrawRectangle(0,(int)GameData.Consts.WindowSize.Y / 2,(int)GameData.Consts.WindowSize.X,(int)GameData.Consts.WindowSize.Y / 2,Color.DarkPurple); //floor
+                        Raylib.DrawRectangle(0,(int)GameData.Consts.WindowSize.Y,(int)GameData.Consts.WindowSize.X,(int)GameData.Consts.WindowSize.Y,Color.DarkGray); //celling
+                     
                         for (int a = 0; a < _numRays; a++)
                         {
                             float angle = _startAngle + (a * _fov / _numRays);
                     
-                            float maxLineLength = 500f;
+                            float maxLineLength = 1000f;
                             float lineLength = 1;
                             Vector2 lineEnd = Vector2.Zero;
                             bool hit = false;
@@ -200,14 +203,14 @@ class Program
 
                                     Raylib.DrawRectangle(
                                         (int)(raywallsize * a),
-                                        (int)(GameData.Consts.WindowSize.Y - (GameData.Consts.WindowSize.Y - Misc.checkcollision(new Rectangle(lineEnd, 4, 4), Map.GetMap()).Item2)),
+                                        (int)(GameData.Consts.WindowSize.Y * 0.95f - (GameData.Consts.WindowSize.Y - Misc.checkcollision(new Rectangle(lineEnd, 4, 4), Map.GetMap()).Item2)),
                                         (int)raywallsize,
-                                        (int)(GameData.Consts.WindowSize.Y - Misc.checkcollision(new Rectangle(lineEnd, 4, 4), Map.GetMap()).Item2 * 4),
+                                        (int)(GameData.Consts.WindowSize.Y / 1.2 + ((int)(((int)Misc.checkcollision(new Rectangle(lineEnd, 4, 4), Map.GetMap()).Item2 - (int)Misc.checkcollision(new Rectangle(lineEnd, 4, 4), Map.GetMap()).Item2)) * 10f)),
                                         new Color(
                                             (int)255 / (int)Math.Clamp(((int)Math.Clamp(Misc.checkcollision(new Rectangle(lineEnd, 4, 4), Map.GetMap()).Item2,1,int.MaxValue) / 32),1,int.MaxValue),
                                             Math.Clamp(Misc.shorttocolor((short)colorshort).G /4,1,255),
                                             Math.Clamp(255 / (int)Misc.checkcollision(new Rectangle(lineEnd, 4, 4), Map.GetMap()).Item2 * 10,1,255),
-                                            (int)255 / (int)Math.Clamp(((int)Math.Clamp(Misc.checkcollision(new Rectangle(lineEnd, 4, 4), Map.GetMap()).Item2,1,int.MaxValue) / 32),1,int.MaxValue)
+                                            255
                                         )
                                     );
                                     break;
@@ -374,7 +377,7 @@ class Program
 
         Audio.loadsfxresources();
 
-        GameData.RenderType = Types.RenderType._2d;
+        GameData.RenderType = Types.RenderType._3d;
 
         while (!Raylib.WindowShouldClose() && !GameData.ShouldClose)
         {
