@@ -19,6 +19,7 @@ class GameData
         return Consts.ApplicationName() + " - demo";
     }
 
+    public static string version = "1.0.0.0";
     public static Types.Stages currentstage;
     public static bool Debug = false;
 
