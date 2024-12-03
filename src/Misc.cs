@@ -1,3 +1,4 @@
+using System.Net.Http.Headers;
 using System.Numerics;
 using Raylib_cs;
 using suzabkktgame;
@@ -32,8 +33,8 @@ class Misc
         foreach (var item in objects)
         {
             Vector2 tmp = Vector2.Subtract(new Vector2(objectvar.X,objectvar.Y),PlayerData.PlayerPosition);
-            if (Raylib.CheckCollisionRecs(item,new Rectangle(tmp,new Vector2(objectvar.Width,objectvar.Width)))) {
-                return (true,Math.Abs(Vector2.Distance(tmp,new Vector2(item.X,item.Y))));
+            if (Raylib.CheckCollisionRecs(item,new Rectangle(tmp,new Vector2(objectvar.Width,objectvar.Height)))) {
+                return (true,Math.Abs(Vector2.Distance(tmp,new Vector2(item.X - item.Width / 2, item.Y - item.Height / 2))));
             }
         }
         return (false,0);

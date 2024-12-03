@@ -196,16 +196,18 @@ class Program
                                 {
                                     hit = true;
 
+                                    Console.WriteLine((int)Math.Clamp(Misc.checkcollision(new Rectangle(lineEnd, 4, 4), Map.GetMap()).Item2,1,int.MaxValue));
+
                                     Raylib.DrawRectangle(
                                         (int)(raywallsize * a),
-                                        (int)(GameData.Consts.WindowSize.Y / Misc.checkcollision(new Rectangle(lineEnd, 4, 4),Map.GetMap()).Item2),
+                                        (int)(GameData.Consts.WindowSize.Y - (GameData.Consts.WindowSize.Y - Misc.checkcollision(new Rectangle(lineEnd, 4, 4), Map.GetMap()).Item2)),
                                         (int)raywallsize,
-                                        (int)(GameData.Consts.WindowSize.Y - (GameData.Consts.WindowSize.Y / Misc.checkcollision(new Rectangle(lineEnd, 4, 4), Map.GetMap()).Item2)),
+                                        (int)(GameData.Consts.WindowSize.Y - Misc.checkcollision(new Rectangle(lineEnd, 4, 4), Map.GetMap()).Item2 * 4),
                                         new Color(
-                                            Math.Clamp(255 / (int)Misc.checkcollision(new Rectangle(lineEnd, 4, 4), Map.GetMap()).Item2 * 5,0,255),
-                                            Math.Clamp(Misc.shorttocolor((short)colorshort).G /4,0,255),
-                                            Math.Clamp(255 / (int)Misc.checkcollision(new Rectangle(lineEnd, 4, 4), Map.GetMap()).Item2 * 10,0,255),
-                                            255
+                                            (int)255 / (int)Math.Clamp(((int)Math.Clamp(Misc.checkcollision(new Rectangle(lineEnd, 4, 4), Map.GetMap()).Item2,1,int.MaxValue) / 32),1,int.MaxValue),
+                                            Math.Clamp(Misc.shorttocolor((short)colorshort).G /4,1,255),
+                                            Math.Clamp(255 / (int)Misc.checkcollision(new Rectangle(lineEnd, 4, 4), Map.GetMap()).Item2 * 10,1,255),
+                                            (int)255 / (int)Math.Clamp(((int)Math.Clamp(Misc.checkcollision(new Rectangle(lineEnd, 4, 4), Map.GetMap()).Item2,1,int.MaxValue) / 32),1,int.MaxValue)
                                         )
                                     );
                                     break;

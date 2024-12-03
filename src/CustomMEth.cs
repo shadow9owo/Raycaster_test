@@ -1,4 +1,4 @@
-using System.ComponentModel.DataAnnotations;
+using System.Numerics;
 
 class CustomMEth //MATH LIB (no meth here)
 {
@@ -10,5 +10,24 @@ class CustomMEth //MATH LIB (no meth here)
             return max;
         }
         return input;
+    }
+    public static float SafeDivide(float input,float divideby) {
+        try 
+        {
+            return Math.Clamp(input,1,float.MaxValue) / Math.Clamp(divideby,1,float.MaxValue); //works in our case
+        }
+        catch (DivideByZeroException ex)
+        {
+
+        }
+        return 1;
+    }
+    public static Vector2 vector2avg(Vector2[] vector2arr) {
+        Vector2 tmp = Vector2.Zero;
+        foreach (var item in vector2arr)
+        {
+            tmp = Vector2.Add(item,tmp);
+        }
+        return new Vector2(tmp.X / vector2arr.Length,tmp.Y / vector2arr.Length);
     }
 }
