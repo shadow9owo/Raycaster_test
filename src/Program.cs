@@ -199,8 +199,6 @@ class Program
                                 {
                                     hit = true;
 
-                                    Console.WriteLine((int)Math.Clamp(Misc.checkcollision(new Rectangle(lineEnd, 4, 4), Map.GetMap()).Item2,1,int.MaxValue));
-
                                     Raylib.DrawRectangle(
                                         (int)(raywallsize * a),
                                         (int)(GameData.Consts.WindowSize.Y * 0.95f - (GameData.Consts.WindowSize.Y - Misc.checkcollision(new Rectangle(lineEnd, 4, 4), Map.GetMap()).Item2)),
