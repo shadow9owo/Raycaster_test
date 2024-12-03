@@ -1,13 +1,18 @@
 ﻿using System.Numerics;
-using System.Security.Cryptography.X509Certificates;
+using ImGuiNET;
+using rlImGui_cs;
 using Raylib_cs;
+using System;
+using Newtonsoft.Json;
 
 namespace suzabkktgame;
 
 class Program
 {
-    private static int playersize = 32;
-    private static Vector2 playerscreenpos;
+    private static Color backgroundcolor;
+    public static float colorshort = short.MinValue;
+    private static int playersize = 8;
+    public static Vector2 playerscreenpos;
     private static Vector2 playerscreenMIN;
     private static Vector2 playerscreenMAX;
 
@@ -61,12 +66,14 @@ class Program
                 if (!GameData.paused) 
                 {
                     Raylib.SetMousePosition((int)GameData.Consts.WindowSize.X / 2,(int)GameData.Consts.WindowSize.Y / 2);
+                }else {
+                    Raylib.DrawText("PAUSED",0,0,24,Color.White);
                 }
                 switch (GameData.RenderType)
                 {
                     case Types.RenderType._2d:
-                        Raylib.ClearBackground(Color.Black);
-                        foreach (var item in Map.Objects)
+                        Raylib.ClearBackground(Misc.shorttocolor((short)colorshort));
+                        foreach (var item in Map.GetMap())
                         {
                             var objectobj = item;
                             objectobj.X = objectobj.X + PlayerData.PlayerPosition.X;
@@ -74,7 +81,6 @@ class Program
                             Raylib.DrawRectangleRec(objectobj, Color.White);
                         }
                     
-                        Program.playersize = 32;
                         Program.playerscreenpos = new Vector2((int)GameData.Consts.WindowSize.X / 2, (int)GameData.Consts.WindowSize.Y / 2);
                         Program.playerscreenMIN = new Vector2((int)GameData.Consts.WindowSize.X / 2, (int)(GameData.Consts.WindowSize.Y / 2) - Program.playersize / 2);
                         Program.playerscreenMAX = new Vector2((int)GameData.Consts.WindowSize.X / 2, (int)(GameData.Consts.WindowSize.Y / 2) + Program.playersize / 2);
@@ -101,7 +107,7 @@ class Program
                                     Program.playerscreenpos.Y + MathF.Sin(angle) * lineLength
                                 );
                     
-                                if (Misc.checkcollision(new Rectangle(lineEnd, 4, 4), Map.Objects).Item1)
+                                if (Misc.checkcollision(new Rectangle(lineEnd, 4, 4), Map.GetMap()).Item1)
                                 {
                                     hit = true;
                                     break;
@@ -140,7 +146,7 @@ class Program
                         }
                         break;
                     case Types.RenderType._3d:
-                        Raylib.ClearBackground(Color.White);
+                        Raylib.ClearBackground(Misc.shorttocolor((short)colorshort));
                         int _numRays = 500;
 
                         float raywallsize = GameData.Consts.WindowSize.X / _numRays;
@@ -163,19 +169,19 @@ class Program
                                     Program.playerscreenpos.Y + MathF.Sin(angle) * lineLength
                                 );
                     
-                                if (Misc.checkcollision(new Rectangle(lineEnd, 4, 4), Map.Objects).Item1)
+                                if (Misc.checkcollision(new Rectangle(lineEnd, 4, 4), Map.GetMap()).Item1)
                                 {
                                     hit = true;
 
                                     Raylib.DrawRectangle(
                                         (int)(raywallsize * a),
-                                        (int)(GameData.Consts.WindowSize.Y / Misc.checkcollision(new Rectangle(lineEnd, 4, 4),Map.Objects).Item2),
+                                        (int)(GameData.Consts.WindowSize.Y / Misc.checkcollision(new Rectangle(lineEnd, 4, 4),Map.GetMap()).Item2),
                                         (int)raywallsize,
-                                        (int)(GameData.Consts.WindowSize.Y - (GameData.Consts.WindowSize.Y / Misc.checkcollision(new Rectangle(lineEnd, 4, 4), Map.Objects).Item2)),
+                                        (int)(GameData.Consts.WindowSize.Y - (GameData.Consts.WindowSize.Y / Misc.checkcollision(new Rectangle(lineEnd, 4, 4), Map.GetMap()).Item2)),
                                         new Color(
-                                            (int)Math.Clamp(0 + (255 / (Misc.checkcollision(new Rectangle(lineEnd, 4, 4), Map.Objects).Item2)), 0, 255),
-                                            (int)Math.Clamp(0 + (255 / (Misc.checkcollision(new Rectangle(lineEnd, 4, 4), Map.Objects).Item2)), 0, 255),
-                                            (int)Math.Clamp(0 + (255 / (Misc.checkcollision(new Rectangle(lineEnd, 4, 4), Map.Objects).Item2)), 0, 255),
+                                            backgroundcolor.R,
+                                            (int)Math.Clamp(0 + (255 / (Misc.checkcollision(new Rectangle(lineEnd, 4, 4), Map.GetMap()).Item2)), 0, 255),
+                                            backgroundcolor.B,
                                             255
                                         )
                                     );
@@ -192,6 +198,118 @@ class Program
                         break;
                 }
                 break;
+            case Types.Stages.leveleditor:
+                Raylib.ClearBackground(Color.Black);
+                rlImGui.Begin();
+                if (ImGui.Begin("Level Editor"))
+                {
+                    ImGui.Text("Level -- writter tool");
+
+                    ImGui.BeginChild("Tools && Config", new Vector2(0, 150));
+                    ImGui.InputText("map name", ref LevelEditor.name, 32);
+                    ImGui.InputInt("X position", ref LevelEditor.X_pos, 0);
+                    ImGui.InputInt("Y position", ref LevelEditor.Y_pos, 0);
+                    ImGui.InputInt("Width", ref LevelEditor.Width, 0);
+                    ImGui.InputInt("Height", ref LevelEditor.Height, 0);
+                    ImGui.EndChild();
+                
+                    // Options for adding/removing map objects
+                    ImGui.BeginChild("Options", new Vector2(0, 150));
+                
+                    if (ImGui.Button("Add to map", new Vector2(128, 32)))
+                    {
+                        if (LevelEditor.Height != 0 && LevelEditor.Width != 0)
+                        {
+                            Map.levelmap.Add(new Rectangle(new Vector2(LevelEditor.X_pos, LevelEditor.Y_pos), new Vector2(LevelEditor.Width, LevelEditor.Height)));
+                        }
+                    }
+                
+                    ImGui.SameLine();
+                
+                    if (ImGui.Button("Export", new Vector2(128, 32)))
+                    {
+                        if (Map.levelmap.Count > 0)
+                        {
+                            List<Types.Gameobject> gameobjects = new List<Types.Gameobject>();
+                            foreach (var item in Map.levelmap)
+                            {
+                                Types.Gameobject temp = new Types.Gameobject
+                                {
+                                    Xpos = (int)item.X,
+                                    Ypos = (int)item.Y,
+                                    Width = (int)item.Width,
+                                    Height = (int)item.Height
+                                };
+                                gameobjects.Add(temp);
+                            }
+                
+                            File.WriteAllText(LevelEditor.name + ".MAP", JsonConvert.SerializeObject(gameobjects));
+                        }
+                    }
+                
+                    ImGui.SameLine();
+                
+                    if (ImGui.Button("Remove last", new Vector2(128, 32)))
+                    {
+                        if (Map.levelmap.Count > 0)
+                        {
+                            Map.levelmap.RemoveAt(Map.levelmap.Count - 1);
+                        }
+                    }
+                
+                    ImGui.SameLine();
+                
+                    if (ImGui.Button("List Map Data", new Vector2(128, 32)))
+                    {
+                        if (File.Exists("tmp.txt")) { File.Delete("tmp.txt"); }
+                
+                        using (FileStream fs = File.Create("tmp.txt"))
+                        {
+                            if (Map.levelmap.Count > 0)
+                            {
+                                foreach (var item in Map.levelmap)
+                                {
+                                    byte[] data = new System.Text.UTF8Encoding(true).GetBytes("X: " + (int)item.X);
+                                    fs.Write(data, 0, data.Length);
+                                    data = new System.Text.UTF8Encoding(true).GetBytes(" Y: " + (int)item.Y);
+                                    fs.Write(data, 0, data.Length);
+                                    data = new System.Text.UTF8Encoding(true).GetBytes(" Width: " + (int)item.Width);
+                                    fs.Write(data, 0, data.Length);
+                                    data = new System.Text.UTF8Encoding(true).GetBytes(" Height: " + (int)item.Height);
+                                    fs.Write(data, 0, data.Length);
+                                    data = new System.Text.UTF8Encoding(true).GetBytes("\n");
+                                    fs.Write(data, 0, data.Length);
+                                }
+                            }
+                        }
+                
+                        System.Diagnostics.Process.Start("notepad.exe", "tmp.txt");
+                    }
+
+                    if (ImGui.Button("Leave", new Vector2(128, 32)))
+                    {
+                        if (GameData.currentstage == Types.Stages.leveleditor)
+                        {
+                            if (HandleInput.laststage == Types.Stages.game)
+                            {
+                                Raylib.HideCursor();
+                            }
+                            GameData.currentstage = HandleInput.laststage;
+                        }
+                        else
+                        {
+                            Raylib.ShowCursor();
+                            HandleInput.laststage = GameData.currentstage;
+                            GameData.currentstage = Types.Stages.leveleditor;
+                        }
+                    }
+                
+                    ImGui.EndChild();
+                }
+
+                ImGui.End();
+                rlImGui.End();
+                break;
             default:
                 break;
         }
@@ -199,15 +317,23 @@ class Program
 
     public static void Main()
     {
+        Raylib.SetConfigFlags(ConfigFlags.Msaa4xHint | ConfigFlags.VSyncHint);
+
+        Raylib.SetTargetFPS(30);
+
         Raylib.InitWindow((int)GameData.Consts.WindowSize.X,(int)GameData.Consts.WindowSize.Y, GameData.GetWindowTitle());
 
         Raylib.SetExitKey(0);
+
+        rlImGui.Setup(true);	
 
         GameData.RenderType = Types.RenderType._2d;
 
         while (!Raylib.WindowShouldClose() && !GameData.ShouldClose)
         {
             Raylib.BeginDrawing();
+
+            colorshort = CustomMEth.InvClamp(colorshort+1,short.MinValue,short.MaxValue);
 
             HandleInput.HandleGameInput();
 
@@ -219,6 +345,8 @@ class Program
 
             Raylib.EndDrawing();
         }
+
+        rlImGui.Shutdown();
 
         Raylib.ShowCursor();
 
