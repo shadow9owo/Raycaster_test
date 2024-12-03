@@ -240,7 +240,7 @@ class Program
                 
                     if (ImGui.Button("Add to map", new Vector2(128, 32)))
                     {
-                        if (LevelEditor.Height != 0 && LevelEditor.Width != 0)
+                        if (LevelEditor.Height != 0 || LevelEditor.Width != 0)
                         {
                             Map.levelmap.Add(new Rectangle(new Vector2(LevelEditor.X_pos, LevelEditor.Y_pos), new Vector2(LevelEditor.Width, LevelEditor.Height)));
                         }
