@@ -349,6 +349,8 @@ class Program
                 Program.playerscreenMAX = new Vector2((int)GameData.Consts.WindowSize.X / 2, (int)(GameData.Consts.WindowSize.Y / 2) + Program.playersize / 2);
                 Raylib.DrawCircle((int)Program.playerscreenpos.X, (int)Program.playerscreenpos.Y, Program.playersize, Color.White);
 
+                Raylib.DrawText($"Mouse loc:\nX: {Raylib.GetMouseX() + PlayerData.PlayerPosition.X}\nY: {Raylib.GetMouseY() + PlayerData.PlayerPosition.Y}",0,0,24,Color.White);
+
                 ImGui.End();
                 rlImGui.End();
                 break;
