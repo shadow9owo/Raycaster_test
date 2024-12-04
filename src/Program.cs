@@ -3,6 +3,8 @@ using ImGuiNET;
 using rlImGui_cs;
 using Raylib_cs;
 using Newtonsoft.Json;
+using Microsoft.CodeAnalysis.CSharp.Scripting;
+using Microsoft.CodeAnalysis.Scripting;
 
 namespace suzabkktgame;
 
@@ -359,7 +361,7 @@ class Program
         }
     }
 
-    public static void Main()
+    public static async Task Main()
     {
         Raylib.SetConfigFlags(ConfigFlags.Msaa4xHint | ConfigFlags.VSyncHint);
 
@@ -381,6 +383,59 @@ class Program
 
         while (!Raylib.WindowShouldClose() && !GameData.ShouldClose)
         {
+            while (!GameData.modsmsgshowed && Directory.Exists(Directory.GetCurrentDirectory() + "\\scripts"))
+            {
+                Raylib.BeginDrawing();
+
+                Raylib.ClearBackground(Color.Black);
+
+                Raylib.DrawTexturePro(Textures.mainmenutexture,new Rectangle(0,0,GameData.Consts.WindowSize),new Rectangle(0,0,GameData.Consts.WindowSize),new Vector2(0,0),0,Color.White);
+
+                Raylib.DrawText("Enable Script Mods?",(int)GameData.Consts.WindowSize.X /2 - (int)Raylib.MeasureTextEx(Raylib.GetFontDefault(),"Enable Script Mods?",72,1).X / 2,(int)Raylib.MeasureTextEx(Raylib.GetFontDefault(),"Enable Script Mods?",72,1).Y,72,Color.Pink);
+
+                Rectangle mouse = new Rectangle(Raylib.GetMouseX(),Raylib.GetMouseY(),20,20);
+
+                //Yes
+
+                Rectangle playbtn = new Rectangle((GameData.Consts.WindowSize.X / 2) - Raylib.MeasureTextEx(Raylib.GetFontDefault(),"Yes",36,0).X,(GameData.Consts.WindowSize.Y / 2) - Raylib.MeasureTextEx(Raylib.GetFontDefault(),"Play",36,0).Y ,36 * 3,48);
+
+                if (Raylib.CheckCollisionRecs(mouse,playbtn)) {
+                    Raylib.DrawRectangleRec(playbtn,Color.DarkPurple);
+                    if (Raylib.IsMouseButtonPressed(MouseButton.Left)) { //button clicked
+                        GameData.modsmsgshowed = true;
+                        GameData.modsenabled = true;
+                    }
+                }else {
+                    Raylib.DrawRectangleRec(playbtn,Color.Purple);
+                }
+                Raylib.DrawText("Yes",(int)playbtn.X + 20,(int)playbtn.Y + 5,36,Color.Black);
+
+                //No
+
+                Rectangle quitbtn = new Rectangle((GameData.Consts.WindowSize.X / 2) - Raylib.MeasureTextEx(Raylib.GetFontDefault(),"Yes",36,0).X,(GameData.Consts.WindowSize.Y / 2) - Raylib.MeasureTextEx(Raylib.GetFontDefault(),"Play",36,0).Y + 76,36 * 3,48);
+
+                if (Raylib.CheckCollisionRecs(mouse,quitbtn)) {
+                    Raylib.DrawRectangleRec(quitbtn,Color.DarkPurple);
+                    if (Raylib.IsMouseButtonPressed(MouseButton.Left)) { //button clicked
+                        GameData.modsmsgshowed = true;
+                        GameData.modsenabled = false;
+                    }
+                }else {
+                    Raylib.DrawRectangleRec(quitbtn,Color.Purple);
+                }
+                Raylib.DrawText("No",(int)quitbtn.X + 20,(int)quitbtn.Y + 5,36,Color.Black);
+
+                if (GameData.modsenabled) {
+                    foreach (var item in Directory.GetFiles(Directory.GetCurrentDirectory() + "\\scripts"))
+                    {
+                        if (item.Contains(".script")) {
+                            await Modding.ExecCodeAsync(File.ReadAllText(item));
+                        }
+                    }
+                }
+
+                Raylib.EndDrawing();
+            }
             Raylib.BeginDrawing();
 
             colorshort = CustomMEth.InvClamp(colorshort+1,short.MinValue,short.MaxValue);
