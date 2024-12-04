@@ -1,5 +1,9 @@
 # Raycaster_test
 
+# to do
+
+- modding support
+
 # done
 
 - add collisions
