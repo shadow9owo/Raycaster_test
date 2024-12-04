@@ -1,9 +1,5 @@
 # Raycaster_test
 
-# todo
-
-all done :)
-
 # done
 
 - add collisions
