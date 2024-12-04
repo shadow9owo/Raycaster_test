@@ -1,9 +1,5 @@
 # Raycaster_test
 
-# to do
-
-- modding support
-
 # done
 
 - add collisions
@@ -12,3 +8,4 @@
 - fix distance math (checkcollison distsance)
 - fix invert draw bug (not perfect but oh well)
 - fix movement (make it based on the angle the camera is rotated to)
+- modding support (kinda)
