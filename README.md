@@ -2,7 +2,7 @@
 
 # todo
 
-- fix movement (make it based on the angle the camera is rotated to)
+all done
 
 # done
 
@@ -12,3 +12,4 @@
 - improve the raycasting accuracy (aka fix the fishtank effect (bug))
 - fix distance math (checkcollison distsance)
 - fix invert draw bug (not perfect but oh well)
+- fix movement (make it based on the angle the camera is rotated to)
