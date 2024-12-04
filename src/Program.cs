@@ -177,7 +177,7 @@ class Program
                         float _startAngle = PlayerData.CameraRotation - _fov / 2f;
                     
                         Raylib.DrawRectangle(0,(int)GameData.Consts.WindowSize.Y / 2,(int)GameData.Consts.WindowSize.X,(int)GameData.Consts.WindowSize.Y / 2,Color.DarkPurple); //floor
-                        Raylib.DrawRectangle(0,(int)GameData.Consts.WindowSize.Y,(int)GameData.Consts.WindowSize.X,(int)GameData.Consts.WindowSize.Y,Color.DarkGray); //celling
+                        Raylib.DrawRectangle(0,(int)GameData.Consts.WindowSize.Y / 2,(int)GameData.Consts.WindowSize.X,(int)GameData.Consts.WindowSize.Y,Color.DarkGray); //celling
                      
                         for (int a = 0; a < _numRays; a++)
                         {
