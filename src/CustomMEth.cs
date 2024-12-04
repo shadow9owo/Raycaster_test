@@ -11,6 +11,14 @@ class CustomMEth //MATH LIB (no meth here)
         }
         return input;
     }
+    public static float Clamp10(float input) {
+        if (Math.Abs(input +1) < Math.Abs(input - 1)) {
+            return -1;
+        } else if (Math.Abs(input +1) > Math.Abs(input - 1)) {
+            return 1;
+        }
+        return 0;
+    }
     public static float SafeDivide(float input,float divideby) {
         try 
         {

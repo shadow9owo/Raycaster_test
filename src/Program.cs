@@ -111,7 +111,7 @@ class Program
 
                         int numRays = 200;
 
-                        float fov = MathF.PI / 3f;
+                        float fov = MathF.PI / 3f * 60;
                         float startAngle = PlayerData.CameraRotation - fov / 2f;
                     
                         for (int i = 0; i < numRays; i++)
@@ -126,8 +126,8 @@ class Program
                             while (!hit && lineLength < maxLineLength)
                             {
                                 lineEnd = new Vector2(
-                                    Program.playerscreenpos.X + MathF.Cos(angle) * lineLength,
-                                    Program.playerscreenpos.Y + MathF.Sin(angle) * lineLength
+                                    Program.playerscreenpos.X + MathF.Cos(angle / 60) * lineLength,
+                                    Program.playerscreenpos.Y + MathF.Sin(angle / 60) * lineLength
                                 );
                     
                                 if (Misc.checkcollision(new Rectangle(lineEnd, 4, 4), Map.GetMap()).Item1)
@@ -154,8 +154,8 @@ class Program
                             else if ((i == 0 || i == numRays - 1) && GameData.Debug)
                             {
                                 lineEnd = new Vector2(
-                                    Program.playerscreenpos.X + MathF.Cos(angle) * lineLength,
-                                    Program.playerscreenpos.Y + MathF.Sin(angle) * lineLength
+                                    Program.playerscreenpos.X + MathF.Cos(angle / 60) * lineLength,
+                                    Program.playerscreenpos.Y + MathF.Sin(angle / 60) * lineLength
                                 );
                     
                                 Raylib.DrawLine(
@@ -173,7 +173,7 @@ class Program
                         int _numRays = 500;
 
                         float raywallsize = GameData.Consts.WindowSize.X / _numRays;
-                        float _fov = MathF.PI / 3f;
+                        float _fov = MathF.PI / 3f * 60;
                         float _startAngle = PlayerData.CameraRotation - _fov / 2f;
                     
                         Raylib.DrawRectangle(0,(int)GameData.Consts.WindowSize.Y / 2,(int)GameData.Consts.WindowSize.X,(int)GameData.Consts.WindowSize.Y / 2,Color.DarkPurple); //floor
@@ -191,8 +191,8 @@ class Program
                             while (!hit && lineLength < maxLineLength) //the cam is horrible but like it does the trick i guess?
                             {
                                 lineEnd = new Vector2(
-                                    Program.playerscreenpos.X + MathF.Cos(angle) * lineLength,
-                                    Program.playerscreenpos.Y + MathF.Sin(angle) * lineLength
+                                    Program.playerscreenpos.X + MathF.Cos(angle / 60) * lineLength,
+                                    Program.playerscreenpos.Y + MathF.Sin(angle / 60) * lineLength
                                 );
                     
                                 if (Misc.checkcollision(new Rectangle(lineEnd, 4, 4), Map.GetMap()).Item1)

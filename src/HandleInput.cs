@@ -6,6 +6,7 @@ using suzabkktgame;
 class HandleInput
 {
     static float angle;
+    static float sensitivity = 4;
     public static Types.Stages laststage;
     public static void HandleGameInput() {
         if (Raylib.IsKeyPressed(KeyboardKey.F3)) {
@@ -28,10 +29,9 @@ class HandleInput
                 }
 
                 if (!GameData.paused) {
-                    if (MathF.Abs(Raylib.GetMouseDelta().X) > 0.1f) {
-                        PlayerData.CameraRotation += Raylib.GetMouseDelta().X / 144;
-                        PlayerData.CameraRotation = CustomMEth.InvClamp(PlayerData.CameraRotation, -180, 180);
-                    }
+
+                    PlayerData.CameraRotation += CustomMEth.Clamp10(Raylib.GetMouseDelta().X) * sensitivity;
+                    PlayerData.CameraRotation = CustomMEth.InvClamp(PlayerData.CameraRotation, 0, 360);
     
                     float angle = PlayerData.CameraRotation * MathF.PI / 180f;
     
@@ -40,16 +40,20 @@ class HandleInput
                     Vector2 originalpos = PlayerData.PlayerPosition;
                     
                     if (Raylib.IsKeyDown(KeyboardKey.W) || Raylib.IsKeyDown(KeyboardKey.Up)) {
-                        PlayerData.PlayerPosition.Y += step;
+                        PlayerData.PlayerPosition.X -= MathF.Cos(angle) * step;
+                        PlayerData.PlayerPosition.Y -= MathF.Sin(angle) * step;
                     }
                     if (Raylib.IsKeyDown(KeyboardKey.S) || Raylib.IsKeyDown(KeyboardKey.Down)) {
-                        PlayerData.PlayerPosition.Y -= step;
+                        PlayerData.PlayerPosition.X += MathF.Cos(angle) * step;
+                        PlayerData.PlayerPosition.Y += MathF.Sin(angle) * step;
                     }
                     if (Raylib.IsKeyDown(KeyboardKey.A) || Raylib.IsKeyDown(KeyboardKey.Left)) {
-                        PlayerData.PlayerPosition.X += step;
+                        PlayerData.PlayerPosition.X -= MathF.Cos(angle- MathF.PI / 2) * step;
+                        PlayerData.PlayerPosition.Y -= MathF.Sin(angle - MathF.PI / 2) * step;
                     }
                     if (Raylib.IsKeyDown(KeyboardKey.D) || Raylib.IsKeyDown(KeyboardKey.Right)) {
-                        PlayerData.PlayerPosition.X -= step;
+                        PlayerData.PlayerPosition.X += MathF.Cos(angle - MathF.PI / 2) * step;
+                        PlayerData.PlayerPosition.Y += MathF.Sin(angle - MathF.PI / 2) * step;
                     }
                     
                     foreach (var item in Map.GetMap())
