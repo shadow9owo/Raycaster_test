@@ -8,4 +8,4 @@
 - fix distance math (checkcollison distsance)
 - fix invert draw bug (not perfect but oh well)
 - fix movement (make it based on the angle the camera is rotated to)
-- modding support / logger (kinda)
+- modding support (kinda) / logger (stolen from my other project but oh well)
